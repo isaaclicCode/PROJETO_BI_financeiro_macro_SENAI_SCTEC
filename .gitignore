@@ -1,0 +1,23 @@
+# --- Segurança ---
+.streamlit/secrets.toml
+.env
+
+# --- Python ---
+venv/
+env/
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+
+# --- IDE / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Cache Streamlit ---
+.streamlit/cache/
