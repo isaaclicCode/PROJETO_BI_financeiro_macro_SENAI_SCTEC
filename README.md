@@ -23,3 +23,12 @@ Projeto Avaliativo Final — Análise de dados públicos do BACEN (SGS) no perí
 Python · Pandas · Plotly · Streamlit · PostgreSQL (Supabase) · GitFlow
 
 ## 🗂️ Estrutura
+
+├── data/                  # Base de dados bruta e tratada (ou script/instruções para download)
+├── notebooks/             # Análises exploratórias preliminares (EDA) e prototipagem de cálculos
+├── src/                   # Scripts Python modulares (ETL, funções de cálculo de indicadores financeiros)
+├── .streamlit/            # Configurações de tema (config.toml) e modelo de credenciais (secrets.toml.example)
+├── app.py                 # Código principal da aplicação Streamlit (Data App)
+├── requirements.txt       # Bibliotecas e dependências para deploy na nuvem
+├── .gitignore             # Arquivos ignorados pelo Git (venv, secrets.toml, caches)
+└── README.md              # Documentação oficial e completa do projeto
