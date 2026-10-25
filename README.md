@@ -2,10 +2,12 @@
 
 Projeto Avaliativo Final — Análise de dados públicos do BACEN (SGS) no período 2019–2023.
 
-## 🔗 Links Oficiais
-- **Trello (Kanban):** _preencher_
-- **Streamlit Cloud:** _preencher_
-- **Vídeo Pitch:** _preencher_
+### 🔗 Links Oficiais
+* **Trello (Kanban):** [preencher]
+* **Streamlit Cloud:** [preencher]
+* **Vídeo Pitch:** [preencher]
+
+---
 
 ## 🎯 Perguntas de Negócio
 1. Evolução da Selic e Juro Real Ex-Post 2019–2023.
@@ -14,35 +16,35 @@ Projeto Avaliativo Final — Análise de dados públicos do BACEN (SGS) no perí
 4. Reação do IBC-Br aos ciclos de aperto e corte da Selic.
 5. Matriz de correlação de Pearson entre as variáveis macroeconômicas.
 
+---
+
 ## 📊 Fonte de Dados
-- **Origem:** API pública oficial do Sistema Gerenciador de Séries Temporais (SGS) do Banco Central do Brasil (BACEN).
-- **Endpoints Utilizados:**
-  - `432`: Selic Meta (% a.a.)
-  - `433`: IPCA Mensal (%)
-  - `13522`: IPCA Acumulado 12 meses (%)
-  - `1`: Dólar PTAX Venda (R$)
-  - `24364`: IBC-Br Dessazonalizado (Índice de Atividade)
-- **Período Temporal:** 01/01/2019 a 31/12/2023 (5 anos).
+* **Origem:** API pública oficial do Sistema Gerenciador de Séries Temporais (SGS) do Banco Central do Brasil (BACEN).
+* **Endpoints Utilizados:**
+  * `432`: Selic Meta (% a.a.)
+  * `433`: IPCA Mensal (%)
+  * `13522`: IPCA Acumulado 12 meses (%)
+  * `1`: Dólar PTAX Venda (R$)
+  * `24364`: IBC-Br Dessazonalizado (Índice de Atividade)
+* **Período Temporal:** 01/01/2019 a 31/12/2023 (5 anos).
 
 ---
 
 ## ⚙️ Pipeline de ETL (Extração, Transformação e Carga)
-
-O pipeline foi construído de forma modular e 100% reprodutível, utilizando **caminhos relativos** via `pathlib.Path` para garantir a execução em qualquer máquina e no Streamlit Cloud.
+O pipeline foi construído de forma modular e 100% reprodutível, utilizando caminhos relativos via `pathlib.Path` para garantir a execução em qualquer máquina e no Streamlit Cloud.
 
 ### 1. Extração (`src/etl_bacen.py`)
-- **Processo:** O script consome a API do BACEN via biblioteca `requests`, extrai os dados brutos das 5 séries oficiais no formato JSON e os converte para arquivos `.csv` padronizados (`utf-8`).
-- **Armazenamento:** Os dados brutos são salvos na pasta `data/raw/` (ex: `meta_selic_raw.csv`, `dolar_ptax_raw.csv`).
+* **Processo:** O script consome a API do BACEN via biblioteca `requests`, extrai os dados brutos das 5 séries oficiais no formato JSON e os converte para arquivos `.csv` padronizados (utf-8).
+* **Armazenamento:** Os dados brutos são salvos na pasta `data/raw/`.
 
 ### 2. Tratamento e Consolidação (`src/tratamento.py`)
-- **Higienização:** Tratamento de valores nulos, remoção de duplicatas (mantendo a última publicação em caso de retificação do BACEN) e padronização de encoding.
-- **Conversão de Tipos:** Datas convertidas para `datetime` (padrão ISO) e strings numéricas convertidas para `float` (tratando vírgulas decimais pt-BR e pontos en-US).
-- **Padronização Mensal:** Séries diárias (Selic e Dólar) são agregadas para base mensal (`MS` - Month Start). A Selic usa o último valor do mês (`.last()`) e o Dólar a média do mês (`.mean()`).
-- **Cálculo Financeiro (Fórmula de Fisher):** Cálculo do **Juro Real Ex-Post** mensal para cada período, utilizando a equação exata:
-  `Juro Real = ((1 + Selic/100) / (1 + IPCA_12m/100) - 1) * 100`
-- **Saídas:**
-  - `data/processed/macro_consolidado.csv`: Base final tratada (60 linhas × 10 colunas).
-  - `docs/logs/transform_report.md`: Relatório de auditoria de qualidade (nulos, duplicatas e cobertura temporal).
+* **Higienização:** Tratamento de valores nulos, remoção de duplicatas e padronização de encoding.
+* **Conversão de Tipos:** Datas convertidas para `datetime` e strings numéricas convertidas para `float`.
+* **Padronização Mensal:** Séries diárias (Selic e Dólar) são agregadas para base mensal (MS - Month Start).
+* **Cálculo Financeiro (Fórmula de Fisher):** Cálculo do Juro Real Ex-Post mensal: `Juro Real = ((1 + Selic/100) / (1 + IPCA_12m/100) - 1) * 100`.
+* **Saídas:** 
+  * `data/processed/macro_consolidado.csv`: Base final tratada (60 linhas × 10 colunas).
+  * `docs/logs/transform_report.md`: Relatório de auditoria de qualidade.
 
 ### 3. Dicionário de Dados (Base Consolidada)
 | Campo | Tipo | Descrição / Regra de Negócio |
@@ -58,14 +60,25 @@ O pipeline foi construído de forma modular e 100% reprodutível, utilizando **c
 | `mes` | Int | Mês extraído da data (1 a 12). |
 | `trimestre` | Int | Trimestre extraído da data (1 a 4). |
 
-## 🚀 Como Executar o Projeto (Reprodutibilidade)
+---
 
-Para rodar o pipeline localmente, siga os passos abaixo:
+## 🔬 Análise Exploratória de Dados (EDA)
+A etapa de EDA foi documentada no notebook `notebooks/eda.ipynb`, consumindo diretamente a base consolidada (`macro_consolidado.csv`). Foram realizadas as seguintes análises:
+
+1. **Estatísticas Descritivas:** Mapeamento de médias, medianas, desvios-padrão e valores extremos (mínimos e máximos) das variáveis econômicas. Destaca-se o registro de Juro Real negativo durante o período pandêmico.
+2. **Matriz de Correlação de Pearson:** Heatmap interativo correlacionando todas as variáveis. Identificou-se forte correlação positiva entre o IPCA e a Selic (mecanismo de transmissão da política monetária) e correlação negativa entre o Dólar e o IBC-Br.
+3. **Análise de Séries Temporais:** Plotagem de linhas do tempo (2019-2023) evidenciando o ciclo de aperto monetário pós-pandemia (alta da Selic), o pico inflacionário e a volatilidade cambial.
+4. **Análise de Sazonalidade:** Agrupamento por mês (`mes`) para identificar padrões históricos. O IPCA apresenta picos sazonais em meses específicos (ex: início do ano), enquanto o IBC-Br mostra o comportamento da atividade econômica mês a mês.
+
+---
+
+## 🚀 Como Executar o Projeto (Reprodutibilidade)
+Para rodar o pipeline e o Data App localmente, siga os passos abaixo:
 
 ```bash
 # 1. Clone o repositório e acesse a pasta
-git clone https://github.com/SEU_USUARIO/bi-financeiro-macro.git
-cd bi-financeiro-macro
+git clone https://github.com/isaaclicCode/PROJETO_BI_financeiro_macro_SENAI_SCTEC.git
+cd PROJETO_BI_financeiro_macro_SENAI_SCTEC
 
 # 2. Crie e ative o ambiente virtual
 python -m venv venv
@@ -81,18 +94,25 @@ python src/etl_bacen.py
 # 5. Execute o tratamento (gera a base consolidada em data/processed/)
 python src/tratamento.py
 
-# 6. Inicie o Data App (Streamlit)
+# 6. (Opcional) Abra o notebook de EDA para visualizar as análises
+# Abra a pasta notebooks/ no VS Code e execute as células do eda.ipynb
+
+# 7. Inicie o Data App (Streamlit)
 streamlit run app.py
 
-## 🗂️ Estrutura
-
 ├── data/                  # Base de dados bruta e tratada (ou script/instruções para download)
-├── notebooks/             # Análises exploratórias preliminares (EDA) e prototipagem de cálculos
-├── src/                   # Scripts Python modulares (ETL, funções de cálculo de indicadores financeiros)
-├── .streamlit/            # Configurações de tema (config.toml) e modelo de credenciais (secrets.toml.example)
+│   ├── raw/               # Dados originais extraídos do BACEN
+│   └── processed/         # Base consolidada pronta para uso (macro_consolidado.csv)
+├── docs/logs/             # Relatórios de auditoria e transformação
+├── notebooks/             # Análises exploratórias preliminares (EDA)
+│   └── eda.ipynb          # Notebook com análises estatísticas e gráficos
+├── src/                   # Scripts Python modulares
+│   ├── etl_bacen.py       # Script de extração da API
+│   └── tratamento.py      # Script de limpeza e cálculo de indicadores
+├── .streamlit/            # Configurações de tema e modelo de credenciais
 ├── app.py                 # Código principal da aplicação Streamlit (Data App)
 ├── requirements.txt       # Bibliotecas e dependências para deploy na nuvem
-├── .gitignore             # Arquivos ignorados pelo Git (venv, secrets.toml, caches)
+├── .gitignore             # Arquivos ignorados pelo git (venv, secrets.toml, caches)
 └── README.md              # Documentação oficial e completa do projeto
 
 ⚙️ Tecnologias Utilizadas
@@ -100,8 +120,7 @@ streamlit run app.py
 Linguagem: Python 3.x
 Manipulação de Dados: Pandas, NumPy
 Requisições API: Requests
-Visualização: Plotly Express
+Visualização de Dados: Plotly Express, Seaborn, Matplotlib (EDA)
 Data App: Streamlit
 Banco de Dados / Nuvem: PostgreSQL (Supabase) + Streamlit Community Cloud
 Versionamento: Git & GitFlow (GitHub)
-

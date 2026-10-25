@@ -355,4 +355,4 @@ if __name__ == "__main__":
         run(fail_on_null=args.fail_on_null)
     except Exception as exc:
         logger.exception("Falha na transformação: %s", exc)
-        sys.exit(1)
+        sys.exit
