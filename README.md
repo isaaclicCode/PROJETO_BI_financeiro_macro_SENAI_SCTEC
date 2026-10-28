@@ -70,7 +70,17 @@ A etapa de EDA foi documentada no notebook `notebooks/eda.ipynb`, consumindo dir
 3. **Análise de Séries Temporais:** Plotagem de linhas do tempo (2019-2023) evidenciando o ciclo de aperto monetário pós-pandemia (alta da Selic), o pico inflacionário e a volatilidade cambial.
 4. **Análise de Sazonalidade:** Agrupamento por mês (`mes`) para identificar padrões históricos. O IPCA apresenta picos sazonais em meses específicos (ex: início do ano), enquanto o IBC-Br mostra o comportamento da atividade econômica mês a mês.
 
----
+### 💡 Principais Insights Obtidos (Resumo Executivo)
+Com base na Análise Exploratória de Dados (EDA), destacam-se os seguintes achados para o período de 2019 a 2023:
+
+1. **Ciclo de Juros e Juro Real:** O Juro Real Ex-Post foi negativo durante o ápice da pandemia (2020-2021), estimulando a economia. Contudo, com a escalada inflacionária, o Banco Central promoveu um forte aperto monetário, levando o Juro Real ao pico histórico de **10% em junho de 2023**.
+2. **Comportamento Cambial:** O Dólar PTAX iniciou o período a R$ 3,75 e sofreu forte choque em 2020, mantendo-se acima da média do quinquênio (R$ 4,93) na maior parte do tempo.
+3. **Inflação Importada (Choque Cambial):** Identificou-se uma correlação moderada (**0,477**) entre a desvalorização do Dólar e a alta do IPCA com defasagem de 3 meses, comprovando o repasse cambial para os preços domésticos.
+4. **Freio na Atividade Econômica:** O IBC-Br mostrou forte recuperação em 2021, mas estagnou à medida que o ciclo de alta da Selic avançou, demonstrando o efeito da política monetária contracionista sobre o crescimento.
+5. **Matriz de Correlação:** A matriz de Pearson evidenciou a forte interdependência entre a Selic e o Juro Real (0,78) e confirmou a correlação negativa entre o Juro Real e o IPCA Mensal (-0,40), validando o mecanismo de transmissão da política monetária.
+
+> **⚠️ Limitações Metodológicas:** As análises de correlação não estabelecem causalidade. Além disso, o recorte temporal (2019-2023) engloba eventos atípicos (pandemia, choques geopolíticos), limitando a generalização dos padrões encontrados.git add README.md
+git commit -m "docs: adiciona resumo executivo com os principais insights da EDA no README"
 
 ## 🚀 Como Executar o Projeto (Reprodutibilidade)
 Para rodar o pipeline e o Data App localmente, siga os passos abaixo:
