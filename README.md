@@ -1,8 +1,8 @@
-# 📊 BI Financeiro — Macroeconomia, Taxas de Juros & Indicadores Econômicos
+# 📊  Financeiro — Macroeconomia, Taxas de Juros & Indicadores Econômicos
 
 Projeto Avaliativo Final — Análise de dados públicos do BACEN (SGS) no período 2019–2023.
 
-### 🔗 Links Oficiais
+### 🔗 Links OficiaisBI
 * **Trello (Kanban):** [preencher]
 * **Streamlit Cloud:** [preencher]
 * **Vídeo Pitch:** [preencher]
@@ -82,6 +82,18 @@ Com base na Análise Exploratória de Dados (EDA), destacam-se os seguintes acha
 > **⚠️ Limitações Metodológicas:** As análises de correlação não estabelecem causalidade. Além disso, o recorte temporal (2019-2023) engloba eventos atípicos (pandemia, choques geopolíticos), limitando a generalização dos padrões encontrados.git add README.md
 git commit -m "docs: adiciona resumo executivo com os principais insights da EDA no README"
 
+---
+
+## 🗄️ Arquitetura de Banco de Dados (Cloud PostgreSQL)
+Para garantir a resiliência e a escalabilidade do Data App, a base de dados consolidada foi migrada para um banco de dados relacional na nuvem, utilizando o **PostgreSQL** (hospedado no **Supabase**).
+
+*   **Carga de Dados (`src/carga_sql.py`):** Script Python responsável por ler a base local (`macro_consolidado.csv`), tipar corretamente os dados (convertendo strings para `DATE` e `FLOAT`) e enviar via SQLAlchemy para a nuvem.
+*   **Segurança e Credenciais:** As credenciais de acesso ao banco foram isoladas no arquivo `.streamlit/secrets.toml` (protegido pelo `.gitignore`), garantindo que nenhuma senha seja exposta no repositório público.
+*   **Tabela em Nuvem:** A tabela `macro_consolidado` reside no schema `public` do Supabase, pronta para ser consumida via consultas SQL nativas pelo Data App.
+
+## 🚀 Como Executar o Projeto (Reprodutibilidade)
+Para rodar o pipeline e o Data App localmente, siga os passos abaixo:
+
 ## 🚀 Como Executar o Projeto (Reprodutibilidade)
 Para rodar o pipeline e o Data App localmente, siga os passos abaixo:
 
@@ -104,33 +116,40 @@ python src/etl_bacen.py
 # 5. Execute o tratamento (gera a base consolidada em data/processed/)
 python src/tratamento.py
 
-# 6. (Opcional) Abra o notebook de EDA para visualizar as análises
-# Abra a pasta notebooks/ no VS Code e execute as células do eda.ipynb
+# 6. Configure as credenciais do banco
+# Crie o arquivo .streamlit/secrets.toml com as credenciais do seu Supabase (modelo no secrets.toml.example)
 
-# 7. Inicie o Data App (Streamlit)
+# 7. Execute a carga para o PostgreSQL (Supabase)
+python src/carga_sql.py
+
+# 8. Inicie o Data App (Streamlit)
 streamlit run app.py
 
-├── data/                  # Base de dados bruta e tratada (ou script/instruções para download)
+## 🗂️ Estrutura do Repositório
+
+├── data/                  # Base de dados bruta e tratada
 │   ├── raw/               # Dados originais extraídos do BACEN
 │   └── processed/         # Base consolidada pronta para uso (macro_consolidado.csv)
 ├── docs/logs/             # Relatórios de auditoria e transformação
 ├── notebooks/             # Análises exploratórias preliminares (EDA)
 │   └── eda.ipynb          # Notebook com análises estatísticas e gráficos
 ├── src/                   # Scripts Python modulares
-│   ├── etl_bacen.py       # Script de extração da API
-│   └── tratamento.py      # Script de limpeza e cálculo de indicadores
+│   ├── etl_bacen.py       # Script de extração da API do BACEN
+│   ├── tratamento.py      # Script de limpeza e cálculo de indicadores (Fórmula de Fisher)
+│   └── carga_sql.py       # Script de envio da base consolidada para o Supabase (PostgreSQL)
 ├── .streamlit/            # Configurações de tema e modelo de credenciais
 ├── app.py                 # Código principal da aplicação Streamlit (Data App)
 ├── requirements.txt       # Bibliotecas e dependências para deploy na nuvem
 ├── .gitignore             # Arquivos ignorados pelo git (venv, secrets.toml, caches)
 └── README.md              # Documentação oficial e completa do projeto
 
-⚙️ Tecnologias Utilizadas
+## ⚙️ Tecnologias Utilizadas
 
-Linguagem: Python 3.x
-Manipulação de Dados: Pandas, NumPy
-Requisições API: Requests
-Visualização de Dados: Plotly Express, Seaborn, Matplotlib (EDA)
-Data App: Streamlit
-Banco de Dados / Nuvem: PostgreSQL (Supabase) + Streamlit Community Cloud
-Versionamento: Git & GitFlow (GitHub)
+* **Linguagem:** Python 3.x
+* **Manipulação de Dados:** Pandas, NumPy
+* **Requisições API:** Requests
+* **Visualização de Dados:** Plotly Express, Seaborn, Matplotlib (EDA)
+* **Banco de Dados & ORM:** PostgreSQL (Supabase), SQLAlchemy, Psycopg2
+* **Data App:** Streamlit
+* **Nuvem & Deploy:** Streamlit Community Cloud
+* **Versionamento:** Git & GitFlow (GitHub)
