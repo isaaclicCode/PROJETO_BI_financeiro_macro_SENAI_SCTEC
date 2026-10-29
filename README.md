@@ -109,6 +109,16 @@ A interface final do projeto foi construída utilizando o **Streamlit**, proporc
 *   **UX/UI (Pirâmide Invertida):** Estrutura organizada em abas que apresentam Contexto, Insight e Ação (metodologia Nielsen) no topo de cada tela para reduzir a carga cognitiva.
 *   **Exportação:** Botão `st.download_button` para baixar os dados filtrados em CSV.
 
+## 🎨 Interface e Design (UX/UI)
+
+O Data App foi construído com foco em uma experiência de usuário executiva, limpa e de alta performance, seguindo as diretrizes da **Pirâmide Invertida (Contexto ➔ Insight ➔ Ação)** e as Heurísticas de Nielsen.
+
+- **Identidade Visual Institucional (Estilo Gov.br):** O tema do Streamlit foi customizado (`.streamlit/config.toml`) utilizando as cores da bandeira do Brasil (Azul Bandeira, Verde Bandeira e Amarelo), transmitindo autoridade e confiança para o ambiente financeiro.
+- **Cabeçalho Customizado:** Injeção de HTML/CSS para criar uma barra superior com a identidade visual do painel (BACEN | Macroeconomia).
+- **Aviso Legal (Compliance e Ética):** Inclusão de um rodapé e alerta na *sidebar* deixando explícito que o projeto é estritamente acadêmico, sem vínculos oficiais com o Governo Federal, respeitando as diretrizes de Ética em Dados.
+- **Navegação Fluida:** Interface organizada em 5 abas temáticas (`st.tabs`) para evitar a sobrecarga cognitiva e facilitar a navegação entre Política Monetária, Câmbio, Inflação, Atividade e Correlação.
+- **Reatividade e Estado:** Filtros dinâmicos cruzados na barra lateral (`st.sidebar`) com botão de *Reset* funcional, gerenciados via `st.session_state`.
+- **Exportação:** Botão para download da base filtrada em CSV (`st.download_button`), permitindo que o usuário final realize análises externas.
 
 ## 🚀 Como Executar o Projeto (Reprodutibilidade)
 Para rodar o pipeline e o Data App localmente, siga os passos abaixo:

@@ -1,0 +1,7 @@
+[theme]
+# Cores inspiradas na Bandeira do Brasil para visual institucional
+primaryColor = "#009c3b"        # Verde Bandeira (botões, sliders, linhas de destaque)
+backgroundColor = "#ffffff"     # Fundo branco (limpo e corporativo)
+secondaryBackgroundColor = "#f8f9fa" # Cinza clarinho para a barra lateral
+textColor = "#002776"           # Azul Bandeira escuro (textos e títulos)
+font = "sans serif"
