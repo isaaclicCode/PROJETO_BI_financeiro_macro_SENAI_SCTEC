@@ -40,3 +40,4 @@ def carregar_para_supabase():
 
 if __name__ == "__main__":
     carregar_para_supabase()
+    
